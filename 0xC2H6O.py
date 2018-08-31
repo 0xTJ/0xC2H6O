@@ -12,6 +12,9 @@ formedStr = ''
 listCount = 256
 emailCount = 32
 
+with open('token.txt', 'r') as tokenFile:
+    apiToken=tokenFile.read().replace('\n', '')
+
 def AddHeader(req):
     req.add_header('Authorization', 'Token ' + apiToken)
     return req
@@ -45,21 +48,21 @@ for i in range(len(sortedProducts)):
 
 formedStr = 'Name Price ($/L alc.) [***SALE***]\n\n' + formedStr
 
-#print(formedStr)
+print(formedStr)
 
-if formedStr.count('\n') > emailCount + 1:
-    emailStr = join(formedStr.split('\n')[:emailCount])
-else:
-    emailStr = formedStr
+#if formedStr.count('\n') > emailCount + 1:
+#    emailStr = join(formedStr.split('\n')[:emailCount])
+#else:
+#    emailStr = formedStr
 
 htmlStr = formedStr.encode('ascii', 'xmlcharrefreplace').decode()
 htmlStr = htmlStr.replace(' ', '&nbsp;')
 htmlStr = htmlStr.replace('\n', '<br />\n')
 htmlStr = '<html><body><font face = \'monospace\'>' + htmlStr + '</font></body></html>'
 
-with open('/srv/httpd/htdocs/LCBO/index.html', 'rb') as oldFile:
+with open('/var/www/0xtj.ca/html/lcbo/index.html', 'rb') as oldFile:
     oldHtmlString = oldFile.read().decode()
 
 if oldHtmlString != htmlStr:
-    with open('/srv/httpd/htdocs/LCBO/index.html', 'wb') as newFile:
+    with open('/var/www/0xtj.ca/html/lcbo/index.html', 'wb') as newFile:
         newFile.write(str.encode(htmlStr))
